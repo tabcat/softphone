@@ -10,20 +10,38 @@
     <link rel="icon" href="./favicon.ico" />
     <link rel="apple-touch-icon" href="logo192.png" />
     <link rel="manifest" href="./manifest.json" />
+    <style>
+      body {
+        margin: 0px;
+        background-color: black;
+      }
+
+      p.pre-script-message {
+        padding-top: 45%;
+        text-align: center;
+        verticle-align: center;
+        color: white;
+      }
+
+      p#scriptMessage {
+        display: none;
+      }
+    </style>
   </head>
-  <body class="container" style="margin:0px;background-color:black;">
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+  <body>
+    <noscript>
+      <p class="pre-script-message">
+        You need to enable JavaScript to run this app.
+      </p>
+    </noscript>
     <div id="root">
-      <p
-      style="
-        padding-top:45%;
-        text-align:center;
-        verticle-align:center;
-        color:white;
-      ">
+      <p id="scriptMessage" class="pre-script-message">
         awaiting script execution
       </p>
     </div>
-    <script src="index.js"></script>
+    <script type="text/javascript">
+      const scriptMessage = document.getElementById('scriptMessage')
+      if (scriptMessage) scriptMessage.style.display = 'block'
+    </script>
   </body>
 </html>
