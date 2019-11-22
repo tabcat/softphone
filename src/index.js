@@ -3,6 +3,8 @@
 import React from 'react'
 import { render } from 'react-dom'
 
+import * as serviceWorker from './serviceWorker'
+
 import { Provider } from 'react-redux'
 import { AppState } from './state'
 
@@ -12,7 +14,7 @@ import ErrorBoundary from './components/errorBoundary'
 import browserUpdate from 'browser-update'
 browserUpdate()
 
-const rootElement = document.querySelector('#root')
+const rootElement = document.getElementById('root')
 if (rootElement) {
   render(
     <ErrorBoundary>
@@ -23,3 +25,5 @@ if (rootElement) {
     rootElement
   )
 }
+
+serviceWorker.register()
