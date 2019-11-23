@@ -1,27 +1,20 @@
 
 'use strict'
-import { loginKey } from '../config.json'
 import { Component, Suspense, lazy } from 'react'
 
 import { connect } from 'react-redux'
+import { baseSelectors, baseActionCreators } from '../state'
 
 class Initialize extends Component {
-  onComponentDidMount () {
-    const loggedIn = window.sessionStorage.getItem(loginKey) ||
-      window.localStorage.getItem(loginKey) // fails to null
-    this.props.setInitialized()
-    this.props.setLoggedIn(loggedIn)
-  }
-
   render () {
-    const { isInitlialized, isLoggedIn } = this.props
+    const { initlialized, active } = this.props
 
-    const Softphone = () => isInitlialized && isLoggedIn
+    const Softphone = () => initlialized && active
       ? lazy(() => import('./app'))
       : lazy(() => import('./login'))
 
     return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<p style='color: white;'>Loading...</p>}>
         <Softphone />
       </Suspense>
     )
@@ -30,12 +23,13 @@ class Initialize extends Component {
 
 const mapStateToProps = s => {
   return {
+    initialized: baseSelectors.initlialized(s),
+    active: baseSelectors.active(s)
   }
 }
 
-const mapDispatchToProps = s => {
-  return {
-  }
+const mapDispatchToProps = {
+  initialize: baseActionCreators.initialize
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Initialize)

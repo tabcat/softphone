@@ -1,43 +1,40 @@
 
-'use strict'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import { makeStyles } from '@material-ui/core/styles'
 
-import { connect } from 'react-redux'
+import AppDrawer from './drawer'
+import AppBar from './bar'
+import AppContent from './content'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex'
+  },
+  content: {
+    flexGrow: 1,
+    height: '100%'
   }
-})
+}))
 
-class Template0 extends React.Component {
-  render () {
-    const { classes } = this.props
+function App (props) {
+  const classes = useStyles()
 
-    return (
-      <div className={classes.root} />
-    )
-  }
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar />
+      <AppDrawer />
+      <main className={classes.content}>
+        <AppContent />
+      </main>
+    </div>
+  )
 }
 
-const mapStateToProps = s => {
-  return {
-  }
+App.propTypes = {
+  classes: PropTypes.instanceOf(Object)
 }
 
-const mapDispatchToProps = s => {
-  return {
-  }
-}
-
-Template0.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles, { withTheme: true })(Template0))
+export default App

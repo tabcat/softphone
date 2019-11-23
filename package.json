@@ -49,7 +49,6 @@
   "homepage": "https://github.com/tabcat/softphone#readme",
   "dependencies": {
     "@tabcat/ipfs-bundle-t": "0.0.6",
-    "browser-update": "^3.3.8",
     "orbit-db": "^0.22.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

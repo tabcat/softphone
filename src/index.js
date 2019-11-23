@@ -11,9 +11,6 @@ import { AppState } from './state'
 import Initialize from './components/Initialize'
 import ErrorBoundary from './components/errorBoundary'
 
-import browserUpdate from 'browser-update'
-browserUpdate()
-
 const rootElement = document.getElementById('root')
 if (rootElement) {
   render(
