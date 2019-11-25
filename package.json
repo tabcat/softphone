@@ -48,6 +48,8 @@
   },
   "homepage": "https://github.com/tabcat/softphone#readme",
   "dependencies": {
+    "@material-ui/core": "^4.7.0",
+    "@material-ui/icons": "^4.5.1",
     "@tabcat/ipfs-bundle-t": "0.0.6",
     "orbit-db": "^0.22.1",
     "react": "^16.12.0",
