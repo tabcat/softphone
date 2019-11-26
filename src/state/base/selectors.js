@@ -1,11 +1,10 @@
 
 const baseState = (state) => state.base
 
-const baseSelectors = {
+export const baseSelectors = {
   initialized: (state) => baseState(state).initialized,
-  active: (state) => baseState(state).active,
+  active: (state) => Boolean(baseState(state).activeUser),
+  activeUser: (state) => baseState(state).activeUser,
   loggedIn: (state) => baseState(state).loggedIn,
   localUsers: (state) => baseState(state).localUsers
 }
-
-export { baseSelectors }

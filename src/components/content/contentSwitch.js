@@ -31,7 +31,7 @@ function App (props) {
   return (
     <div className={classes.root}>
       <ErrorBoundary>
-        <Suspense fallback={<p style='color: white;'>Loading...</p>}>
+        <Suspense fallback={<p style={{ color: 'white' }}>Loading...</p>}>
           {renderContent(props.content)}
         </Suspense>
       </ErrorBoundary>

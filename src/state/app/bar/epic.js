@@ -1,8 +1,8 @@
 
 // import { combineEpics, ofType } from 'redux-observable'
 // import { map } from 'rxjs/operators'
-// import { baseTypes, baseCreators } from './actions'
+// import { barTypes, barCreators } from './actions'
 
-export const baseEpic = action$ => action$.pipe(
+export const barEpic = action$ => action$.pipe(
   // ofType(),
 )

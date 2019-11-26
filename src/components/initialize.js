@@ -1,21 +1,24 @@
 
-'use strict'
-import { Component, Suspense, lazy } from 'react'
+import React, { Suspense, lazy } from 'react'
 
 import { connect } from 'react-redux'
-import { baseSelectors, baseActionCreators } from '../state'
+import { baseSelectors } from '../state'
 
-class Initialize extends Component {
+console.log(baseSelectors)
+
+const Login = lazy(() => import('./login'))
+const App = lazy(() => import('./app'))
+
+class Initialize extends React.Component {
   render () {
     const { initlialized, active } = this.props
-
-    const Softphone = () => initlialized && active
-      ? lazy(() => import('./app'))
-      : lazy(() => import('./login'))
+    // const Softphone = () => initlialized && active
+    //   ? lazy(() => import('./app'))
+    //   : lazy(() => import('./login'))
 
     return (
-      <Suspense fallback={<p style='color: white;'>Loading...</p>}>
-        <Softphone />
+      <Suspense fallback={<p style={{ color: 'white' }}>Loading...</p>}>
+        {initlialized && active ? <App /> : <Login />}
       </Suspense>
     )
   }
@@ -23,13 +26,9 @@ class Initialize extends Component {
 
 const mapStateToProps = s => {
   return {
-    initialized: baseSelectors.initlialized(s),
+    initialized: baseSelectors.initialized(s),
     active: baseSelectors.active(s)
   }
 }
 
-const mapDispatchToProps = {
-  initialize: baseActionCreators.initialize
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Initialize)
+export default connect(mapStateToProps)(Initialize)

@@ -7,37 +7,34 @@ import Hidden from '@material-ui/core/Hidden'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 
 import { connect } from 'react-redux'
+import { drawerSelectors, drawerActionCreators } from '../../state'
 
 import ActiveUser from './activeUser'
-import AppNav from './appNav'
-import AppFooter from './appFooter'
-
-const drawerWidth = 260
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0
-    }
-  },
-  drawer: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%'
-  },
-  drawerPaper: {
-    width: drawerWidth
-  },
-  activeUser: theme.mixins.toolbar,
-  appNav: {
-    flexGrow: 1
-  },
-  appFooter: theme.mixins.toolbar
-}))
+import Nav from './nav'
+import Footer from './footer'
 
 function AppDrawer (props) {
-  const classes = useStyles()
+  const classes = makeStyles(theme => ({
+    root: {
+      [theme.breakpoints.up('sm')]: {
+        width: props.drawerWidth,
+        flexShrink: 0
+      }
+    },
+    drawer: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%'
+    },
+    drawerPaper: {
+      width: props.drawerWidth
+    },
+    activeUser: theme.mixins.toolbar,
+    nav: {
+      flexGrow: 1
+    },
+    footer: theme.mixins.toolbar
+  }))
   const theme = useTheme()
 
   const handleDrawerToggle = () => {
@@ -50,12 +47,12 @@ function AppDrawer (props) {
         <ActiveUser />
       </div>
       <Divider />
-      <div className={classes.appNav}>
-        <AppNav />
+      <div className={classes.nav}>
+        <Nav />
       </div>
       <Divider />
-      <div className={classes.appFooter}>
-        <AppFooter />
+      <div className={classes.footer}>
+        <Footer />
       </div>
     </div>
   )
@@ -98,12 +95,13 @@ function AppDrawer (props) {
 
 const mapStateToProps = (s) => {
   return {
-    mobileOpen: appDrawerSelectors(s).mobileOpen
+    width: drawerSelectors(s).width,
+    mobileOpen: drawerSelectors(s).mobileOpen
   }
 }
 
 const mapDispatchToProps = {
-  toggleMobileOpen: appDrawerActionCreators.toggleMobileOpen
+  toggleMobileOpen: drawerActionCreators.toggleMobileOpen
 }
 
 AppDrawer.propTypes = {

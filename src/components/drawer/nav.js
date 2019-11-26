@@ -1,69 +1,74 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import Avatar from '@material-ui/core/Avatar'
+import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Collapse from '@material-ui/core/Collapse'
+import MailIcon from '@material-ui/icons/Mail'
+import ContactsIcon from '@material-ui/icons/Contacts'
+import StarIcon from '@material-ui/icons/Star'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
-import StarBorder from '@material-ui/icons/StarBorder'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { connect } from 'react-redux'
 import {
-  baseSelectors,
-  baseActionCreators,
   drawerSelectors,
   drawerActionCreators,
   contentActionCreators
 } from '../../state'
 
+const contentToIcon = {
+  Messages: <MailIcon />,
+  Contacts: <ContactsIcon />
+}
+
 const useStyles = makeStyles(theme => ({
-  root: {
-    padding: 0
-  },
   nested: {
     paddingLeft: theme.spacing(4)
   }
 }))
 
-function ActiveUser (props) {
+function Nav (props) {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(false)
 
-  const handleToggle = () => {
-    setOpen(!open)
+  const handleSetContent = (content) => {
+    props.setContent(content)
+  }
+
+  const handleExpand = () => {
+    props.toggleFavoritesOpen()
   }
 
   return (
-    <List className={classes.root} component='nav' aria-label='active user'>
-      <ListItem
-        button
-        key='user options'
-        aria-controls={open ? 'expand-list' : undefined}
-        aria-haspopup='true'
-        onClick={handleToggle}
-      >
+    <List component='nav' aria-label='navigation'>
+      {Object.keys(contentToIcon).map(key => (
+        <ListItem button key={key} onClick={() => handleSetContent(key)}>
+          <ListItemIcon>
+            {contentToIcon[key]}
+          </ListItemIcon>
+          <ListItemText primary={key} />
+        </ListItem>
+      ))}
+      <Divider />
+      <ListItem button key='Favorites' onClick={handleExpand}>
         <ListItemIcon>
-          <ListItemAvatar>
-            <Avatar>A</Avatar>
-          </ListItemAvatar>
+          <StarIcon />
         </ListItemIcon>
-        <ListItemText primary='Anders' />
+        <ListItemText primary='Favorites' />
         <ListItemSecondaryAction>
-          {open ? <ExpandLess /> : <ExpandMore />}
+          {props.favoritesOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItemSecondaryAction>
       </ListItem>
-      <Collapse in={open} timeout='auto' unmountOnExit>
+      <Collapse in={props.favoritesOpen} timeout='auto' unmountOnExit>
         <List component='div' disablePadding>
           <ListItem button className={classes.nested}>
             <ListItemIcon>
-              <StarBorder />
+              icon
             </ListItemIcon>
             <ListItemText primary='Starred' />
           </ListItem>
@@ -75,22 +80,20 @@ function ActiveUser (props) {
 
 const mapStateToProps = s => {
   return {
-    name: baseSelectors(s).activeUser.name,
-    expanded: drawerSelectors(s).activeUserOpen
+    favoritesOpen: drawerSelectors(s).favoritesOpen
   }
 }
 
 const mapDispatchToProps = {
-  toggleExpand: drawerActionCreators.toggleActiveUserOpen,
   setContent: contentActionCreators.setContent,
-  selectLogOut: baseActionCreators.selectLogOut
+  toggleFavoritesOpen: drawerActionCreators.toggleFavoritesOpen
 }
 
-ActiveUser.PropTypes = {
+Nav.propTypes = {
   classes: PropTypes.instanceOf(Object)
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ActiveUser)
+)(Nav)

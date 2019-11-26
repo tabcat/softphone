@@ -6,30 +6,26 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 import { connect } from 'react-redux'
+import { contentSelectors, drawerActionCreators } from '../../state'
 
-const drawerWidth = 260
-
-const useStyles = makeStyles(theme => ({
-  appBar: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth
+function Bar (props) {
+  const classes = makeStyles(theme => ({
+    appBar: {
+      [theme.breakpoints.up('sm')]: {
+        width: `calc(100% - ${props.drawerWidth}px)`,
+        marginLeft: props.drawerWidth
+      }
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up('sm')]: {
+        display: 'none'
+      }
     }
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none'
-    }
-  }
-}))
-
-function App (props) {
-  const classes = useStyles()
-  const theme = useTheme()
+  }))
 
   const handleDrawerToggle = () => {
     props.toggleDrawer()
@@ -57,18 +53,18 @@ function App (props) {
 
 const mapStateToProps = s => {
   return {
-    title: appBarSelectors(s).title
+    title: contentSelectors(s).title
   }
 }
 const mapDispatchToProps = {
-  toggleDrawer: appBarActionCreators.toggleDrawer
+  toggleDrawer: drawerActionCreators.toggleDrawer
 }
 
-App.propTypes = {
+Bar.propTypes = {
   classes: PropTypes.instanceOf(Object)
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App)
+)(Bar)

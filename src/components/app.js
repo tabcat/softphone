@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles } from '@material-ui/core/styles'
 
-import AppDrawer from './drawer'
-import AppBar from './bar'
-import AppContent from './content'
+import Drawer from './drawer'
+import Bar from './bar'
+import Content from './content'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,10 +24,10 @@ function App (props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar />
-      <AppDrawer />
+      <Bar />
+      <Drawer />
       <main className={classes.content}>
-        <AppContent />
+        <Content />
       </main>
     </div>
   )
