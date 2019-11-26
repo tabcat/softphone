@@ -4,8 +4,6 @@ import React, { Suspense, lazy } from 'react'
 import { connect } from 'react-redux'
 import { baseSelectors } from '../state'
 
-console.log(baseSelectors)
-
 const Login = lazy(() => import('./login'))
 const App = lazy(() => import('./app'))
 

@@ -1,6 +1,5 @@
 
 import React from 'react'
-import CssBaseline from '@material-ui/core/CssBaseline'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import TextField from '@material-ui/core/TextField'
@@ -9,12 +8,19 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 import Lock from '@material-ui/icons/Lock'
 import { makeStyles } from '@material-ui/core/styles'
 
+import { connect } from 'react-redux'
+import { baseActionCreators } from '../state'
+
 const useStyles = makeStyles(theme => ({
   root: {
+    overflow: 'auto',
+    backgroundColor: 'grey',
+    height: '100%',
+    width: '100%'
+  },
+  container: {
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
-    width: '100%',
     alignItems: 'center'
   },
   header: {
@@ -29,7 +35,7 @@ const useStyles = makeStyles(theme => ({
   login: {
     display: 'flex',
     flexWrap: 'wrap',
-    padding: '20px',
+    padding: '40px',
     [theme.breakpoints.up('lg')]: {
       minWidth: theme.breakpoints.values.lg
     },
@@ -49,45 +55,48 @@ const useStyles = makeStyles(theme => ({
   footer: {}
 }))
 
-export default function Login () {
+function Login () {
   const classes = useStyles()
 
   return (
-    <>
-      <CssBaseline />
-      <Container maxWidth='xl'>
-        <div className={classes.root}>
-          <div className={classes.header} />
-          <div className={classes.loginContainer}>
-            <div className={classes.login}>
-              <Typography variant='h2'>softphone</Typography>
-              <div className={classes.loginInputs}>
-                <Grid container spacing={1} alignItems='flex-end'>
-                  <Grid item>
-                    <AccountCircle />
-                  </Grid>
-                  <Grid item>
-                    <TextField id='input-with-icon-grid' label='username' />
-                  </Grid>
+    <div className={classes.root}>
+      <Container maxWidth='xl' className={classes.container}>
+        <div className={classes.header} />
+        <div className={classes.loginContainer}>
+          <div className={classes.login}>
+            <Typography variant='h2'>softphone</Typography>
+            <div className={classes.loginInputs}>
+              <Grid container spacing={1} alignItems='flex-end'>
+                <Grid item>
+                  <AccountCircle />
                 </Grid>
-                <Grid container spacing={1} alignItems='flex-end'>
-                  <Grid item>
-                    <Lock />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      id='input-with-icon-grid'
-                      type='password'
-                      label='password'
-                    />
-                  </Grid>
+                <Grid item>
+                  <TextField aria-label='username' label='username' />
                 </Grid>
-              </div>
+              </Grid>
+              <Grid container spacing={1} alignItems='flex-end'>
+                <Grid item>
+                  <Lock />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    aria-label='password'
+                    type='password'
+                    label='password'
+                  />
+                </Grid>
+              </Grid>
             </div>
           </div>
-          <div className={classes.footer} />
         </div>
+        <div className={classes.footer} />
       </Container>
-    </>
+    </div>
   )
 }
+
+const mapDispatchToProps = {
+  logIn: baseActionCreators.logIn
+}
+
+export default connect(undefined, mapDispatchToProps)(Login)

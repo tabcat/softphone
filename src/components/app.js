@@ -1,7 +1,6 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Drawer from './drawer'
@@ -23,7 +22,6 @@ function App (props) {
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
       <Bar />
       <Drawer />
       <main className={classes.content}>

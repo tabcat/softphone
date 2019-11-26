@@ -11,19 +11,20 @@
     <link rel="apple-touch-icon" href="logo192.png" />
     <link rel="manifest" href="./manifest.json" />
     <style>
-      body {
+      html, body {
         margin: 0px;
+        height: 100%;
+        width: 100%;
+        overflow: auto;
         background-color: black;
       }
 
-      pre-script-message {
-        padding-top: 45%;
-        text-align: center;
-        verticle-align: center;
+      .pre-script-message {
         color: white;
+        background-color: black;
       }
 
-      scriptMessage {
+      #scriptMessage {
         display: none;
       }
     </style>
@@ -36,7 +37,7 @@
     </noscript>
     <div id="root">
       <p id="scriptMessage" class="pre-script-message">
-        awaiting script execution
+        ...awaiting script execution
       </p>
     </div>
     <script type="text/javascript">
