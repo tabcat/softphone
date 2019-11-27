@@ -46,7 +46,7 @@
   "bugs": {
     "url": "https://github.com/tabcat/softphone/issues"
   },
-  "homepage": "https://github.com/tabcat/softphone#readme",
+  "homepage": "./",
   "dependencies": {
     "@material-ui/core": "^4.7.0",
     "@material-ui/icons": "^4.5.1",

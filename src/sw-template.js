@@ -1,12 +1,10 @@
 
-'use strict'
-if (typeof window.importScripts === 'function') {
-  window.importScripts(
+if (typeof importScripts === 'function') {
+  importScripts(
     'https://storage.googleapis.com/workbox-cdn/releases/3.5.0/workbox-sw.js'
   )
-
   /* global workbox */
-  if (window.workbox) {
+  if (workbox) {
     console.log('Workbox is loaded')
 
     /* injection point for manifest files.  */
