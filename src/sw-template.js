@@ -1,8 +1,9 @@
 
 if (typeof importScripts === 'function') {
-  importScripts(
-    'https://storage.googleapis.com/workbox-cdn/releases/3.5.0/workbox-sw.js'
-  )
+  importScripts('./workbox/workbox-v4.3.1/workbox-sw.js')
+
+  workbox.setConfig({ modulePathPrefix: './workbox/workbox-v4.3.1/' })
+
   /* global workbox */
   if (workbox) {
     console.log('Workbox is loaded')
@@ -17,7 +18,7 @@ if (typeof importScripts === 'function') {
 
     workbox.routing.registerRoute(
       /\.(?:png|gif|jpg|jpeg)$/,
-      workbox.strategies.cacheFirst({
+      new workbox.strategies.CacheFirst({
         cacheName: 'images',
         plugins: [
           new workbox.expiration.Plugin({
