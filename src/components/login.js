@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('lg')]: {
       minWidth: '100%'
     },
-    backgroundColor: '#dfdfdf',
+    backgroundColor: '#f2f2f2',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -71,7 +71,13 @@ function Login () {
                   <AccountCircle />
                 </Grid>
                 <Grid item>
-                  <TextField aria-label='username' label='username' />
+                  <TextField
+                    id='username'
+                    label='username'
+                    InputLabelProps={{
+                      style: { color: 'black'}
+                    }}
+                  />
                 </Grid>
               </Grid>
               <Grid container spacing={1} alignItems='flex-end'>
@@ -80,9 +86,12 @@ function Login () {
                 </Grid>
                 <Grid item>
                   <TextField
-                    aria-label='password'
+                    id='password'
                     type='password'
                     label='password'
+                    InputLabelProps={{
+                      style: { color: 'black'}
+                    }}
                   />
                 </Grid>
               </Grid>
