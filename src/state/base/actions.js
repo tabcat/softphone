@@ -8,7 +8,8 @@ export const baseActionTypes = {
   LOG_OUT: 'LOG_OUT',
   LOGGED_OUT: 'LOGGED_OUT',
   SWITCH_USER: 'SWITCH_USER',
-  SWITCHED_USER: 'SWITCHED_USER'
+  SWITCHED_USER: 'SWITCHED_USER',
+  USE_ACCOUNT: 'USE_ACCOUNT'
 }
 const {
   INITIALIZE,
@@ -19,7 +20,8 @@ const {
   LOG_OUT,
   LOGGED_OUT,
   SWITCH_USER,
-  SWITCHED_USER
+  SWITCHED_USER,
+  USE_ACCOUNT
 } = baseActionTypes
 
 export const baseActionCreators = {
@@ -38,5 +40,6 @@ export const baseActionCreators = {
   switchUser: (localUserId) =>
     ({ type: SWITCH_USER, payload: { localUserId } }),
   setSwitchedUser: (localUserId) =>
-    ({ type: SWITCHED_USER, payload: { localUserId } })
+    ({ type: SWITCHED_USER, payload: { localUserId } }),
+  useAccount: (account) => ({ type: USE_ACCOUNT, payload: { account } })
 }

@@ -4,14 +4,12 @@ const {
   INITIALIZED,
   SET_LOCAL_USERS,
   LOGGED_IN,
-  LOGGED_OUT,
-  SWITCHED_USER
+  LOGGED_OUT
 } = baseActionTypes
 
 const INITIAL_STATE = {
   initialized: false,
-  activeUser: null,
-  loggedIn: {},
+  loggedIn: null,
   localUsers: {}
 }
 
@@ -25,19 +23,20 @@ export function baseReducer (state = INITIAL_STATE, action) {
     case LOGGED_IN:
       return {
         ...state,
-        activeUser: payload.localUserId,
-        loggedIn: {
-          ...state.loggedIn,
-          [payload.localUserId]: {
-            credentials: payload.credentials,
-            localUserId: payload.localUserId
-          }
-        }
+        loggedIn: payload.localUserId
+        // activeUser: payload.localUserId,
+        // loggedIn: {
+        //   ...state.loggedIn,
+        //   [payload.localUserId]: {
+        //     credentials: payload.credentials,
+        //     localUserId: payload.localUserId
+        //   }
+        // }
       }
     case LOGGED_OUT:
-      return { ...state, activeUser: null }
-    case SWITCHED_USER:
-      return { ...state, activeUser: payload.localUserId }
+      return { ...state, loggedIn: null }
+    // case SWITCHED_USER:
+    //   return { ...state, activeUser: payload.localUserId }
     default:
       return state
   }
