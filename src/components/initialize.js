@@ -2,21 +2,20 @@
 import React, { Suspense, lazy } from 'react'
 
 import { connect } from 'react-redux'
-import { baseSelectors } from '../state'
+import { baseSelectors, baseActionCreators } from '../state'
 
-const Login = lazy(() => import('./login'))
-const App = lazy(() => import('./app'))
+const Login = lazy(() => import('./base/login'))
+const App = lazy(() => import('./base/app'))
 
 class Initialize extends React.Component {
+  componentDidMount () { this.props.initialize() }
+
   render () {
-    const { initlialized, active } = this.props
-    // const Softphone = () => initlialized && active
-    //   ? lazy(() => import('./app'))
-    //   : lazy(() => import('./login'))
+    const { initialized, loggedIn } = this.props
 
     return (
       <Suspense fallback={<p style={{ color: 'white' }}>Loading...</p>}>
-        {initlialized && active ? <App /> : <Login />}
+        {initialized && loggedIn ? <App /> : <Login />}
       </Suspense>
     )
   }
@@ -25,8 +24,16 @@ class Initialize extends React.Component {
 const mapStateToProps = s => {
   return {
     initialized: baseSelectors.initialized(s),
-    active: baseSelectors.active(s)
+    // active: baseSelectors.active(s),
+    loggedIn: baseSelectors.loggedIn(s)
   }
 }
 
-export default connect(mapStateToProps)(Initialize)
+const mapDispatchToProps = {
+  initialize: baseActionCreators.initialize
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Initialize)

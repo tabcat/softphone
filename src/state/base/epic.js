@@ -12,39 +12,57 @@ import {
   withLatestFrom,
   take,
   switchMap,
-  mergeMap
+  mergeMap,
+  tap,
+  takeUntil,
+  catchError,
+  ignoreElements
 } from 'rxjs/operators'
 import { baseActionTypes, baseActionCreators } from './actions'
 const {
+  INITIALIZE,
   LOG_IN,
   LOGGED_IN,
   LOG_OUT,
-  LOGGED_OUT
+  LOGGED_OUT,
+  LOG_IN_FAILED
 } = baseActionTypes
 const {
   setInitialized,
   setLoggedIn,
   setLoggedOut,
-  setLocalUsers,
-  useAccount
+  setLogInSuccess,
+  setLogInFailed,
+  setLocalUsers
 } = baseActionCreators
-
-const getLocalUsers = async () => login().then(l => l.localUsers())
 
 const logInUserEpic = (action$, state$) => action$.pipe(
   ofType(LOG_IN),
   take(1),
   withLatestFrom(state$),
-  switchMap(async ([action, state]) => {
-    const { username, password } = action.payload
-    const l = await login()
-    const account = await l.loginUser(username, password)
-    const localUser = await l.localUser(username)
-    const localUsers = await l.localUsers()
-    return concat(
-      of(1).pipe(map(() => setLocalUsers(localUsers))),
-      of(1).pipe(map(() => useAccount(account))),
-      of(1).pipe(map(() => setLoggedIn(localUser._id)))
+  mergeMap(([action, state]) => {
+    return defer(async () => {
+      const { username, password } = action.payload
+      const l = await login()
+      const account = await l.loginUser(username, password)
+        // .then(async (acc) => acc.initialized.then(() => acc))
+        .catch((e) => { console.log(e); return undefined })
+      const localUser = await l.localUser(username)
+      const localUsers = await l.localUsers()
+        .then(users => users.map(({ _id, name }) => ({ _id, name })))
+      return [{ username, password }, account, localUser, localUsers]
+    }).pipe(
+      mergeMap(([{ username, password }, account, localUser, localUsers]) => {
+        if (account === undefined) {
+          return of(setLogInFailed())
+        } else {
+          return of(
+            setLogInSuccess(),
+            setLocalUsers(localUsers),
+            setLoggedIn(username, password)
+          )
+        }
+      })
     )
   })
 )
@@ -58,27 +76,31 @@ const logOutUserEpic = (action$, state$) => action$.pipe(
   ofType(LOG_OUT),
   take(1),
   withLatestFrom(state$),
-  switchMap(async ([action, state]) => {
-    return of(1).pipe(map(setLoggedOut))
+  mergeMap(([action, state]) => {
+    return of(setLoggedOut())
   })
 )
 
 export const baseEpic = (action$, state$) => action$.pipe(
-  ofType('@@INIT'),
+  ofType(INITIALIZE),
   take(1),
   mergeMap(() =>
     concat(
-      defer(() => getLocalUsers()).pipe(map(setLocalUsers)),
-      of(1).pipe(map(setInitialized)),
+      defer(async () => { await login() }).pipe(ignoreElements()),
+      of(setInitialized()),
       merge(
-        logInUserEpic,
+        logInUserEpic(action$, state$),
+        action$.pipe(
+          ofType(LOG_IN_FAILED),
+          mergeMap(() => logInUserEpic(action$, state$))
+        ),
         action$.pipe(
           ofType(LOGGED_IN),
-          switchMap(() => logOutUserEpic(action$))
+          mergeMap(() => logOutUserEpic(action$, state$))
         ),
         action$.pipe(
           ofType(LOGGED_OUT),
-          switchMap(() => logInUserEpic(action$))
+          mergeMap(() => logInUserEpic(action$, state$))
         )
       )
     )

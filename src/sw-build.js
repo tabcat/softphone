@@ -10,7 +10,8 @@ const buildSW = () => {
     globDirectory: 'build',
     globPatterns: [
       '**/*.*'
-    ]
+    ],
+    maximumFileSizeToCacheInBytes: 4 * 1024 * 1024
   }).then(({ count, size, warnings }) => {
     // Optionally, log any warnings and details.
     warnings.forEach(console.warn)

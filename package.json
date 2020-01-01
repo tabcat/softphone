@@ -26,9 +26,6 @@
       "last 1 safari version"
     ]
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "standard": {
     "ignore": [
       "src/js/components/templates/"
@@ -51,6 +48,8 @@
     "@material-ui/core": "^4.7.0",
     "@material-ui/icons": "^4.5.1",
     "@tabcat/ipfs-bundle-t": "0.0.6",
+    "@tabcat/peer-account": "0.0.4",
+    "@tabcat/peer-account-login": "0.0.6",
     "orbit-db": "^0.22.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

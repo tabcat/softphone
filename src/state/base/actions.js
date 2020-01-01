@@ -7,9 +7,10 @@ export const baseActionTypes = {
   LOGGED_IN: 'LOGGED_IN',
   LOG_OUT: 'LOG_OUT',
   LOGGED_OUT: 'LOGGED_OUT',
+  LOG_IN_SUCCESS: 'LOG_IN_SUCCESS',
+  LOG_IN_FAILED: 'LOG_IN_FAILED',
   SWITCH_USER: 'SWITCH_USER',
-  SWITCHED_USER: 'SWITCHED_USER',
-  USE_ACCOUNT: 'USE_ACCOUNT'
+  SWITCHED_USER: 'SWITCHED_USER'
 }
 const {
   INITIALIZE,
@@ -19,9 +20,10 @@ const {
   LOGGED_IN,
   LOG_OUT,
   LOGGED_OUT,
+  LOG_IN_SUCCESS,
+  LOG_IN_FAILED,
   SWITCH_USER,
-  SWITCHED_USER,
-  USE_ACCOUNT
+  SWITCHED_USER
 } = baseActionTypes
 
 export const baseActionCreators = {
@@ -29,17 +31,16 @@ export const baseActionCreators = {
   setInitialized: () => ({ type: INITIALIZED }),
   setLocalUsers: (localUsers) =>
     ({ type: SET_LOCAL_USERS, payload: { localUsers } }),
-  logIn: (credentials) =>
-    ({ type: LOG_IN, payload: { credentials } }),
-  setLoggedIn: (localUserId) =>
-    ({ type: LOGGED_IN, payload: { localUserId } }),
-  logOut: (localUserId) =>
-    ({ type: LOG_OUT, payload: { localUserId } }),
-  setLoggedOut: (localUserId) =>
-    ({ type: LOGGED_OUT, payload: { localUserId } }),
+  logIn: (username, password) =>
+    ({ type: LOG_IN, payload: { username, password } }),
+  setLoggedIn: (username, password) =>
+    ({ type: LOGGED_IN, payload: { username, password } }),
+  logOut: () => ({ type: LOG_OUT }),
+  setLoggedOut: () => ({ type: LOGGED_OUT }),
+  setLogInSuccess: () => ({ type: LOG_IN_SUCCESS }),
+  setLogInFailed: () => ({ type: LOG_IN_FAILED }),
   switchUser: (localUserId) =>
     ({ type: SWITCH_USER, payload: { localUserId } }),
   setSwitchedUser: (localUserId) =>
-    ({ type: SWITCHED_USER, payload: { localUserId } }),
-  useAccount: (account) => ({ type: USE_ACCOUNT, payload: { account } })
+    ({ type: SWITCHED_USER, payload: { localUserId } })
 }

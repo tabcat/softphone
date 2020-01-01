@@ -4,13 +4,13 @@ import PropTypes from 'prop-types'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import { appName } from '../../../config'
+import config from '../../config'
 
 function Footer (props) {
   return (
     <List>
-      <ListItem button key={appName}>
-        <ListItemText primary={appName} />
+      <ListItem button key={config.appName}>
+        <ListItemText primary={config.appName} />
       </ListItem>
     </List>
   )

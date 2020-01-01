@@ -1,7 +1,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { useTheme, makeStyles } from '@material-ui/core/styles'
 
 import { connect } from 'react-redux'
 
@@ -15,17 +15,18 @@ const useStyles = makeStyles(theme => ({
   },
   toolbar: theme.mixins.toolbar,
   appContent: {
-    flexGrow: 1
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default
   }
 }))
 
-function AppContent (props) {
-  const classes = useStyles()
+function Content (props) {
   const theme = useTheme()
+  const classes = useStyles(theme)
 
   return (
     <div className={classes.root}>
-      {props.visibleAppBar ? <div className={classes.toolbar} /> : null}
+      {!props.visibleAppBar ? <div className={classes.toolbar} /> : null}
       <div className={classes.appContent}>
         <ContentSwitch />
       </div>
@@ -35,14 +36,14 @@ function AppContent (props) {
 
 const mapStateToProps = s => {
   return {
-    visibleAppBar: appBarSelectors(s).visible
+    // visibleAppBar: appBarSelectors(s).visible
   }
 }
 
-AppContent.propTypes = {
+Content.propTypes = {
   classes: PropTypes.instanceOf(Object)
 }
 
 export default connect(
   mapStateToProps
-)(AppContent)
+)(Content)

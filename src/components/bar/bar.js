@@ -9,7 +9,11 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { connect } from 'react-redux'
-import { contentSelectors, drawerActionCreators } from '../../state'
+import {
+  barSelectors,
+  drawerActionCreators,
+  drawerSelectors
+} from '../../state'
 
 function Bar (props) {
   const classes = makeStyles(theme => ({
@@ -28,7 +32,7 @@ function Bar (props) {
   }))
 
   const handleDrawerToggle = () => {
-    props.toggleDrawer()
+    props.toggleMobileOpen()
   }
 
   return (
@@ -44,7 +48,7 @@ function Bar (props) {
           <MenuIcon />
         </IconButton>
         <Typography variant='h6' noWrap>
-          {props.appBarTitle}
+          {props.title}
         </Typography>
       </Toolbar>
     </AppBar>
@@ -53,11 +57,12 @@ function Bar (props) {
 
 const mapStateToProps = s => {
   return {
-    title: contentSelectors(s).title
+    title: barSelectors.title(s),
+    drawerWidth: drawerSelectors.width(s)
   }
 }
 const mapDispatchToProps = {
-  toggleDrawer: drawerActionCreators.toggleDrawer
+  toggleMobileOpen: drawerActionCreators.toggleMobileOpen
 }
 
 Bar.propTypes = {

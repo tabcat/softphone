@@ -2,7 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Divider from '@material-ui/core/Divider'
-import Drawer from '@material-ui/core/Drawer'
+import ResponsiveDrawer from '@material-ui/core/Drawer'
 import Hidden from '@material-ui/core/Hidden'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 
@@ -13,13 +13,14 @@ import ActiveUser from './activeUser'
 import Nav from './nav'
 import Footer from './footer'
 
-function AppDrawer (props) {
+function Drawer (props) {
   const classes = makeStyles(theme => ({
     root: {
       [theme.breakpoints.up('sm')]: {
-        width: props.drawerWidth,
+        width: props.width,
         flexShrink: 0
-      }
+      },
+      height: '100%'
     },
     drawer: {
       display: 'flex',
@@ -34,7 +35,7 @@ function AppDrawer (props) {
       flexGrow: 1
     },
     footer: theme.mixins.toolbar
-  }))
+  }))()
   const theme = useTheme()
 
   const handleDrawerToggle = () => {
@@ -43,16 +44,18 @@ function AppDrawer (props) {
 
   const drawer = (
     <div className={classes.root}>
-      <div className={classes.activeUser} style={{ flexGrow: 0 }}>
-        <ActiveUser />
-      </div>
-      <Divider />
-      <div className={classes.nav}>
-        <Nav />
-      </div>
-      <Divider />
-      <div className={classes.footer}>
-        <Footer />
+      <div className={classes.drawer}>
+        <div className={classes.activeUser}>
+          <ActiveUser />
+        </div>
+        <Divider />
+        <div className={classes.nav}>
+          <Nav />
+        </div>
+        <Divider />
+        <div className={classes.footer}>
+          <Footer />
+        </div>
       </div>
     </div>
   )
@@ -62,7 +65,7 @@ function AppDrawer (props) {
       {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
 
       <Hidden smUp implementation='js'>
-        <Drawer
+        <ResponsiveDrawer
           variant='temporary'
           anchor={theme.direction === 'rtl' ? 'right' : 'left'}
           open={props.mobileOpen}
@@ -75,11 +78,11 @@ function AppDrawer (props) {
           }}
         >
           {drawer}
-        </Drawer>
+        </ResponsiveDrawer>
       </Hidden>
 
       <Hidden xsDown implementation='js'>
-        <Drawer
+        <ResponsiveDrawer
           classes={{
             paper: classes.drawerPaper
           }}
@@ -87,7 +90,7 @@ function AppDrawer (props) {
           open
         >
           {drawer}
-        </Drawer>
+        </ResponsiveDrawer>
       </Hidden>
     </nav>
   )
@@ -95,8 +98,8 @@ function AppDrawer (props) {
 
 const mapStateToProps = (s) => {
   return {
-    width: drawerSelectors(s).width,
-    mobileOpen: drawerSelectors(s).mobileOpen
+    width: drawerSelectors.width(s),
+    mobileOpen: drawerSelectors.mobileOpen(s)
   }
 }
 
@@ -104,11 +107,11 @@ const mapDispatchToProps = {
   toggleMobileOpen: drawerActionCreators.toggleMobileOpen
 }
 
-AppDrawer.propTypes = {
+Drawer.propTypes = {
   classes: PropTypes.instanceOf(Object)
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AppDrawer)
+)(Drawer)
