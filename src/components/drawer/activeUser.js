@@ -43,6 +43,7 @@ function ActiveUser (props) {
   }
 
   const handleSelect = (key) => {
+    if (props.mobileOpen) props.toggleMobileOpen()
     props.selectContent(key)
   }
 
@@ -105,6 +106,7 @@ function ActiveUser (props) {
 
 const mapStateToProps = s => {
   return {
+    mobileOpen: drawerSelectors.mobileOpen(s),
     loggedIn: baseSelectors.loggedIn(s),
     expanded: drawerSelectors.userExpanded(s),
     selectedContent: contentSelectors.selected(s)
@@ -113,6 +115,7 @@ const mapStateToProps = s => {
 }
 
 const mapDispatchToProps = {
+  toggleMobileOpen: drawerActionCreators.toggleMobileOpen,
   toggleExpanded: drawerActionCreators.toggleUserExpanded,
   selectContent: contentActionCreators.selectContent,
   logOut: baseActionCreators.logOut

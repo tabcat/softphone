@@ -1,5 +1,5 @@
 
-import login from '../../../account'
+import login from '../../account'
 import { ofType } from 'redux-observable'
 import {
   of,
@@ -9,6 +9,7 @@ import {
 } from 'rxjs'
 import {
   map,
+  ignoreElements,
   withLatestFrom,
   take,
   switchMap,
@@ -21,19 +22,25 @@ import {
   contactsActionCreators,
   baseActionTypes,
   baseSelectors
-} from '../../'
+} from '../'
 const {
   ADD_CONTACT,
   ACCEPT_CONTACT,
-  UPDATE_CONTACTS
+  UPDATE_CONTACT_LIST,
+  UPDATE_REQUEST_LIST,
+  SET_CONTACT_LIST,
+  SET_REQUEST_LIST
 } = contactsActionTypes
 const {
   addedContact,
   addContactFail,
   acceptedContact,
   acceptContactFail,
-  updateContacts,
-  setContacts
+  updateContactList,
+  updateRequestList,
+  setContactList,
+  setRequestList,
+  initializedContacts
 } = contactsActionCreators
 const {
   INITIALIZE,
@@ -42,32 +49,17 @@ const {
 } = baseActionTypes
 
 const getComms = async (state) => {
-  const l = await login()
+  const l = await login
   const { username, password } = baseSelectors.loggedIn(state)
   const account = await l.loginUser(username, password)
   await account.initialized
   return account.comms
 }
 
-const getContacts = async (state) => {
+const getContactRecords = async (state) => {
   try {
     const comms = await getComms(state)
-    const contactRecords = await comms.queryContacts(() => true)
-    return Object.keys(comms.contacts)
-      .reduce(async (a, c, i, s) => {
-        try {
-          const contactRecord = contactRecords.filter(doc => doc.name === c)[0]
-          if (!contactRecord) {
-            console.error('cannot find record for that contact')
-            return a
-          }
-          const sessionId = s[c].offer.name
-          return { ...await a, [c]: { sessionId, meta: contactRecord.meta } }
-        } catch (e) {
-          console.error(`failed to reduce session ${c} with contacts`)
-          return a
-        }
-      }, {})
+    return comms.queryContacts(() => true)
   } catch (e) {
     console.error(e)
     console.error('failed to get contacts')
@@ -78,8 +70,17 @@ const getContacts = async (state) => {
 const addContact = async (state, address) => {
   try {
     const comms = await getComms(state)
-    const contact = await comms.addContact(address)
-    return contact.offer.name
+    return comms.addContact(address)
+  } catch (e) {
+    console.error(e)
+    throw e
+  }
+}
+
+const getContactRequests = async (state) => {
+  try {
+    const comms = await getComms(state)
+    return comms.contactOffers()
   } catch (e) {
     console.error(e)
     throw e
@@ -89,30 +90,38 @@ const addContact = async (state, address) => {
 const acceptContact = async (state, sessionId) => {
   try {
     const comms = await getComms(state)
-    const contact = await comms.acceptContact(sessionId)
-    return contact.offer.name
+    return comms.acceptContact(sessionId)
   } catch (e) {
     console.error(e)
     throw e
   }
 }
 
+// const openContact = async (state, sessionId) => {
+//   try {
+//     const comms = await getComms(state)
+//     return comms.openContact(sessionId)
+//   } catch (e) {
+//     console.error(e)
+//     throw e
+//   }
+// }
+
 const addContactsEpic = (action$, state$) => action$.pipe(
   ofType(ADD_CONTACT),
   withLatestFrom(state$),
   mergeMap(([action, state]) =>
-    defer(() => {
-      return addContact(state, action.payload.address)
+    defer(async () => {
+      const contact = await addContact(state, action.payload.address)
+      return contact.offer.name
     }).pipe(
-      catchError(e =>
-        of(addContactFail(action.payload.address))
-      ),
       mergeMap((sessionId) => {
         return concat(
           of(addedContact(sessionId)),
-          of(updateContacts())
+          of(updateContactList())
         )
-      })
+      }),
+      catchError(e => of(addContactFail(action.payload.address)))
     )
   )
 )
@@ -121,8 +130,9 @@ const acceptContactsEpic = (action$, state$) => action$.pipe(
   ofType(ACCEPT_CONTACT),
   withLatestFrom(state$),
   mergeMap(([action, state]) =>
-    defer(() => {
-      return acceptContact(state, action.payload.sessionId)
+    defer(async () => {
+      const contact = await acceptContact(state, action.payload.sessionId)
+      return contact.offer.name
     }).pipe(
       catchError(e =>
         of(acceptContactFail(action.payload.sessionId))
@@ -130,18 +140,33 @@ const acceptContactsEpic = (action$, state$) => action$.pipe(
       mergeMap((sessionId) => {
         return concat(
           of(acceptedContact(sessionId)),
-          of(updateContacts())
+          of(updateContactList())
         )
       })
     )
   )
 )
 
-const updateContactsEpic = (action$, state$) => action$.pipe(
-  ofType(UPDATE_CONTACTS),
+const updateContactListEpic = (action$, state$) => action$.pipe(
+  ofType(UPDATE_CONTACT_LIST),
   withLatestFrom(state$),
   switchMap(([action, state]) =>
-    defer(() => getContacts(state)).pipe(map(setContacts))
+    defer(async () => {
+      const records = await getContactRecords(state)
+      return records.map(
+        ({ _id, name: sessionId, ...record }) => ({ sessionId, ...record })
+      )
+    }).pipe(map(setContactList))
+  )
+)
+
+const updateRequestListEpic = (action$, state$) => action$.pipe(
+  ofType(UPDATE_REQUEST_LIST),
+  withLatestFrom(state$),
+  switchMap(([action, state]) =>
+    defer(async () => {
+      return getContactRequests(state)
+    }).pipe(map(setRequestList))
   )
 )
 
@@ -152,7 +177,19 @@ const onLoggedInEpic = (action$, state$) => action$.pipe(
     merge(
       addContactsEpic(action$, state$),
       acceptContactsEpic(action$, state$),
-      updateContactsEpic(action$, state$)
+      updateContactListEpic(action$, state$),
+      updateRequestListEpic(action$, state$),
+      merge(
+        of(updateContactList()),
+        of(updateRequestList()),
+        concat(
+          merge(
+            action$.pipe(ofType(SET_CONTACT_LIST), take(1)),
+            action$.pipe(ofType(SET_REQUEST_LIST), take(1))
+          ).pipe(ignoreElements()),
+          of(initializedContacts())
+        )
+      )
     ).pipe(
       takeUntil(action$.pipe(ofType(LOGGED_OUT)))
     )

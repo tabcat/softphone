@@ -28,7 +28,7 @@ function Drawer (props) {
       height: '100%'
     },
     drawerPaper: {
-      width: props.drawerWidth
+      width: props.width + 1
     },
     activeUser: theme.mixins.toolbar,
     nav: {

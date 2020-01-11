@@ -2,7 +2,7 @@
 import { combineReducers } from 'redux'
 // import reducerRegistry from './reducerRegistry'
 
-import { barReducer } from './bar/reducer'
+// import { barReducer } from './bar/reducer'
 import { baseReducer } from './base/reducer'
 import { contactsReducer } from './contacts/reducer'
 import { contentReducer } from './content/reducer'
@@ -11,7 +11,7 @@ import { drawerReducer } from './drawer/reducer'
 // import { profileReducer } from './profile/reducer'
 
 export const Reducer = combineReducers({
-  bar: barReducer,
+  // bar: barReducer,
   base: baseReducer,
   contacts: contactsReducer,
   content: contentReducer,

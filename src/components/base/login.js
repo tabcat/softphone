@@ -67,6 +67,8 @@ function Login (props) {
     }
   }
 
+  const { initialized } = props
+
   return (
     <div className={classes.root}>
       <Container maxWidth='xl' className={classes.container}>
@@ -83,12 +85,13 @@ function Login (props) {
                   <TextField
                     error={props.logInFailed}
                     id='username'
-                    label='username'
+                    label={initialized ? 'username' : 'initializing...'}
                     InputLabelProps={{
                       style: { color: 'black' }
                     }}
                     inputRef={username}
                     onKeyDown={handleEnter}
+                    disabled={!initialized}
                   />
                 </Grid>
               </Grid>
@@ -102,12 +105,13 @@ function Login (props) {
                     helperText={props.logInFailed ? 'login failed' : null}
                     id='password'
                     type='password'
-                    label='password'
+                    label={initialized ? 'password' : 'initializing...'}
                     InputLabelProps={{
                       style: { color: 'black' }
                     }}
                     inputRef={password}
                     onKeyDown={handleEnter}
+                    disabled={!initialized}
                   />
                 </Grid>
               </Grid>
@@ -122,6 +126,7 @@ function Login (props) {
 
 const mapStateToProps = (s) => {
   return {
+    initialized: baseSelectors.initialized(s),
     logInFailed: baseSelectors.logInFailed(s)
   }
 }

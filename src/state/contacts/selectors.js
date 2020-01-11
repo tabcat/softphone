@@ -1,6 +1,11 @@
 
-const contactsState = (state) => state.account.contacts
+const contactsState = (state) => state.contacts
 
 export const contactsSelectors = {
-  contacts: (state) => contactsState(state)
+  initialized: (state) => contactsState(state).initialized,
+  selected: (state) => contactsState(state).selected,
+  contactList: (state) => contactsState(state).contactList,
+  requestList: (state) => contactsState(state).requestList,
+  tabIndex: (state) => contactsState(state).tabIndex,
+  addContactDialogOpen: (state) => contactsState(state).addContactDialogOpen
 }

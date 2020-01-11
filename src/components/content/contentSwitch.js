@@ -9,14 +9,14 @@ import { contentSelectors } from '../../state'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
-    height: '100%'
+    height: '100%',
+    width: '100%'
   }
 }))
 
 const contentComponents = {
-  // Profile: lazy(() => import('../profile')),
-  // Contacts: lazy(() => import('../contacts')),
+  Profile: lazy(() => import('../profile')),
+  Contacts: lazy(() => import('../contacts')),
   // Messages: lazy(() => import('../messages'))
 }
 
@@ -29,13 +29,26 @@ function ContentSwitch (props) {
 
   const renderContent = (selected) => {
     if (!selected || !contentComponents[selected]) return null
-    return contentComponents[selected]
+    return React.createElement(contentComponents[selected])
   }
+
+  const loading = (
+    <p
+      style={{
+        display: 'inline',
+        color: 'white',
+        backgroundColor: 'black',
+        margin: 0
+      }}
+    >
+      loading...
+    </p>
+  )
 
   return (
     <div className={classes.root}>
       <ErrorBoundary>
-        <Suspense fallback={<p style={{ color: 'white' }}>Loading...</p>}>
+        <Suspense fallback={loading}>
           {renderContent(props.selected)}
         </Suspense>
       </ErrorBoundary>

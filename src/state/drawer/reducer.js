@@ -1,14 +1,15 @@
 
-import { drawerActionTypes } from '../actions'
+import { drawerActionTypes, baseActionTypes } from '../actions'
 const {
   TOGGLE_MOBILE_OPEN,
   TOGGLE_USER_EXPANDED
 } = drawerActionTypes
+const { LOGGED_OUT } = baseActionTypes
 
 const INITIAL_STATE = {
   mobileOpen: false,
   width: 240,
-  userExpanded: false
+  userExpanded: true
 }
 
 export function drawerReducer (state = INITIAL_STATE, action) {
@@ -18,6 +19,8 @@ export function drawerReducer (state = INITIAL_STATE, action) {
       return { ...state, mobileOpen: !state.mobileOpen }
     case TOGGLE_USER_EXPANDED:
       return { ...state, userExpanded: !state.userExpanded }
+    case LOGGED_OUT:
+      return INITIAL_STATE
     default:
       return state
   }

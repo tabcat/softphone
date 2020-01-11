@@ -43,7 +43,7 @@ const logInUserEpic = (action$, state$) => action$.pipe(
   mergeMap(([action, state]) => {
     return defer(async () => {
       const { username, password } = action.payload
-      const l = await login()
+      const l = await login
       const account = await l.loginUser(username, password)
         // .then(async (acc) => acc.initialized.then(() => acc))
         .catch((e) => { console.log(e); return undefined })
@@ -86,7 +86,7 @@ export const baseEpic = (action$, state$) => action$.pipe(
   take(1),
   mergeMap(() =>
     concat(
-      defer(async () => { await login() }).pipe(ignoreElements()),
+      defer(async () => { await login }).pipe(ignoreElements()),
       of(setInitialized()),
       merge(
         logInUserEpic(action$, state$),

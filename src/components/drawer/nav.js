@@ -11,7 +11,9 @@ import ContactsIcon from '@material-ui/icons/Contacts'
 import { connect } from 'react-redux'
 import {
   contentSelectors,
-  contentActionCreators
+  contentActionCreators,
+  drawerSelectors,
+  drawerActionCreators
 } from '../../state'
 
 const contentToIcon = {
@@ -21,6 +23,7 @@ const contentToIcon = {
 
 function Nav (props) {
   const handleSelectContent = (content) => {
+    if (props.mobileOpen) props.toggleMobileOpen()
     props.selectContent(content)
   }
 
@@ -41,11 +44,13 @@ function Nav (props) {
 const mapStateToProps = s => {
   return {
     // favoritesOpen: drawerSelectors.favoritesOpen(s)
+    mobileOpen: drawerSelectors.mobileOpen(s),
     selectedContent: contentSelectors.selected(s)
   }
 }
 
 const mapDispatchToProps = {
+  toggleMobileOpen: drawerActionCreators.toggleMobileOpen,
   selectContent: contentActionCreators.selectContent
 }
 
