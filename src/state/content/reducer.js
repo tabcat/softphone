@@ -1,5 +1,5 @@
 
-import { contentActionTypes, baseActionTypes } from '../actions'
+import { contentActionTypes, baseActionTypes } from '../'
 const { SELECT_CONTENT } = contentActionTypes
 const { LOGGED_OUT } = baseActionTypes
 

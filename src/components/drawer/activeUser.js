@@ -44,7 +44,7 @@ function ActiveUser (props) {
 
   const handleSelect = (key) => {
     if (props.mobileOpen) props.toggleMobileOpen()
-    props.selectContent(key)
+    if (props.selectedContent !== key) props.selectContent(key)
   }
 
   const handleLogout = () => {

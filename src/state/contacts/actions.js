@@ -35,14 +35,14 @@ const {
 } = contactsActionTypes
 
 export const contactsActionCreators = {
-  addContact: (address) =>
-    ({ type: ADD_CONTACT, payload: { address } }),
+  addContact: (code) =>
+    ({ type: ADD_CONTACT, payload: { code } }),
   addedContact: (sessionId) =>
     ({ type: ADDED_CONTACT, payload: { sessionId } }),
   addContactFail: () =>
     ({ type: ADD_CONTACT_FAIL }),
-  acceptContact: (sessionId) =>
-    ({ type: ACCEPT_CONTACT, payload: { sessionId } }),
+  acceptContact: (profile) =>
+    ({ type: ACCEPT_CONTACT, payload: { profile } }),
   acceptedContact: (sessionId) =>
     ({ type: ACCEPTED_CONTACT, payload: { sessionId } }),
   acceptContactFail: () =>

@@ -5,10 +5,9 @@ import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
 // import { useTheme } from '@material-ui/core/styles'
-import AddContactDialog from './addContactDialog'
 
 import { connect } from 'react-redux'
-import { contactsSelectors, contactsActionCreators } from '../../state'
+import { messagesSelectors, messagesActionCreators, profileSelectors } from '../../state'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,29 +28,33 @@ function BarContent (props) {
     props.setAddContactDialogOpen(true)
   }
 
+  const title = props.selected
+    ? 'Messages / ' + (props.names[props.selected] || props.selected.split('/')[3])
+    : 'Messages'
+
   return (
     <>
       <Typography variant='h6' className={classes.title}>
-        Contacts
+        {title}
       </Typography>
       <IconButton onClick={handleAddContact}>
         <PersonAddIcon />
       </IconButton>
-      <AddContactDialog />
     </>
   )
 }
 
 const mapStateToProps = s => {
   return {
-    selected: contactsSelectors.selected(s)
-    // initialized: contactsSelectors.initialized(s)
+    selected: messagesSelectors.selected(s),
+    names: profileSelectors.names(s)
+    // initialized: messagesSelectors.initialized(s)
   }
 }
 
 const mapDispatchToProps = {
-  setAddContactDialogOpen: contactsActionCreators.setAddContactDialogOpen,
-  showContactList: contactsActionCreators.showContactList
+  setAddContactDialogOpen: messagesActionCreators.setAddContactDialogOpen,
+  showContactList: messagesActionCreators.showContactList
 }
 
 export default connect(

@@ -6,7 +6,9 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import VirtualizedList from '../virtualizedList'
+import TextField from '@material-ui/core/TextField'
+import { FixedSizeList } from 'react-window'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 import { connect } from 'react-redux'
 import {
@@ -14,8 +16,6 @@ import {
   messagesSelectors,
   messagesActionCreators
 } from '../../state'
-
-import MessageFeed from './messageFeed'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,6 +30,9 @@ const useStyles = makeStyles(theme => ({
   list: {
     width: '99%',
     height: '99%'
+  },
+  sendbox: {
+    flexGrow: 0
   }
 }))
 
@@ -55,64 +58,83 @@ const useStyles = makeStyles(theme => ({
 //   )
 // }
 
-const renderMessages = ({ handleSelect }, messageList, names) => props => {
+const renderMessageFeed = (profile, feed, names) => props => {
   const { style, index } = props
-  const profile = messageList[index]
-  const name = names[profile] || profile.split('/')[3] || '<invalid message>'
   return (
     <ListItem
-      button
-      onClick={() => handleSelect(profile)}
       style={style}
       key={index}
     >
       <ListItemText
-        primary={name}
-        // secondary={messagesList[profile]}
-        primaryTypographyProps={{ variant: 'h5' }}
+        primary={feed[index].payload.value.msg.name}
+        secondary={feed[index].payload.value.msg.txt}
+        primaryTypographyProps={{ variant: 'h6' }}
       />
     </ListItem>
   )
 }
 
-function Messages (props) {
+function MessageFeed (props) {
   const theme = useTheme()
   const classes = useStyles(theme)
 
-  if (props.selected) return (<MessageFeed />)
+  const listRef = React.createRef()
+
+  React.useEffect(() => {
+    if (listRef.current) listRef.current.scrollToItem(feed.length, 'end')
+  })
 
   // const grande = useMediaQuery(theme.breakpoints.up('sm'))
-  const itemSize = 94
+  const itemSize = 76
 
-  const handleSelect = (profile) => {
-    props.selectMessage(profile)
+  const handleChange = (event) => {
+    if (event.keyCode === 13 && event.target.value !== '') {
+      props.sendMessage(props.selected, { name: props.names[props.address], txt: event.target.value })
+      event.target.value = ''
+    }
   }
 
-  const list = props.messageList
-
-  const renderRow = renderMessages
-  const handlers = { handleSelect }
+  const renderRow = renderMessageFeed
+  const feed = props.feeds[props.selected]
 
   return (
     <Paper className={classes.root}>
       <div className={classes.listContainer}>
         <div className={classes.list}>
           {
-            list.length === 0
+            feed.length === 0
               ? (
                 <Typography style={{ textAlign: 'center' }} variant='h4'>
                   {props.initialized ? 'no messages' : 'loading...'}
                 </Typography>
               )
               : (
-                <VirtualizedList
-                  renderRow={renderRow(handlers, list, props.names)}
-                  itemSize={itemSize}
-                  itemCount={list.length}
-                />
+                <AutoSizer>
+                  {({ height, width }) => (
+                    <FixedSizeList
+                      height={height}
+                      width={width}
+                      itemSize={itemSize}
+                      itemCount={feed.length}
+                      ref={listRef}
+                    >
+                      {renderRow(props.selected, feed, props.names)}
+                    </FixedSizeList>
+                  )}
+                </AutoSizer>
               )
           }
         </div>
+      </div>
+      <div className={classes.sendbox}>
+        <TextField
+          fullWidth
+          // multiline
+          rowsMax='4'
+          variant='outlined'
+          placeholder='send message'
+          onKeyDown={handleChange}
+        />
       </div>
     </Paper>
   )
@@ -120,18 +142,21 @@ function Messages (props) {
 
 const mapStateToProps = s => {
   return {
-    initialized: messagesSelectors.initialized(s),
-    messageList: messagesSelectors.messageList(s),
     selected: messagesSelectors.selected(s),
-    names: profileSelectors.names(s)
+    feeds: messagesSelectors.feeds(s),
+    scrolls: messagesSelectors.scrolls(s),
+    sendboxes: messagesSelectors.sendboxes(s),
+    names: profileSelectors.names(s),
+    address: profileSelectors.address(s),
+    initialized: messagesSelectors.initialized(s)
   }
 }
 
 const mapDispatchToProps = {
-  selectMessage: messagesActionCreators.setSelected
+  sendMessage: messagesActionCreators.sendMessage
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Messages)
+)(MessageFeed)

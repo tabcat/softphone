@@ -1,5 +1,5 @@
 
-import login from '../../account'
+import pal from '../../account'
 import { ofType } from 'redux-observable'
 import {
   of,
@@ -18,7 +18,7 @@ import {
   catchError,
   ignoreElements
 } from 'rxjs/operators'
-import { baseActionTypes, baseActionCreators } from './actions'
+import { baseActionTypes, baseActionCreators } from '../'
 const {
   INITIALIZE,
   LOG_IN,
@@ -43,12 +43,12 @@ const logInUserEpic = (action$, state$) => action$.pipe(
   mergeMap(([action, state]) => {
     return defer(async () => {
       const { username, password } = action.payload
-      const l = await login
-      const account = await l.loginUser(username, password)
+      const p = await pal
+      const account = await p.loginUser(username, password)
         // .then(async (acc) => acc.initialized.then(() => acc))
         .catch((e) => { console.log(e); return undefined })
-      const localUser = await l.localUser(username)
-      const localUsers = await l.localUsers()
+      const localUser = await p.localUser(username)
+      const localUsers = await p.localUsers()
         .then(users => users.map(({ _id, name }) => ({ _id, name })))
       return [{ username, password }, account, localUser, localUsers]
     }).pipe(
@@ -86,7 +86,7 @@ export const baseEpic = (action$, state$) => action$.pipe(
   take(1),
   mergeMap(() =>
     concat(
-      defer(async () => { await login }).pipe(ignoreElements()),
+      defer(async () => { await pal }).pipe(ignoreElements()),
       of(setInitialized()),
       merge(
         logInUserEpic(action$, state$),

@@ -1,6 +1,11 @@
 
-const messagesState = (state) => state.app.messages
+const messagesState = (state) => state.messages
 
 export const messagesSelectors = {
-  selected: (state) => messagesState(state).selected
+  initialized: (state) => messagesState(state).initialized,
+  selected: (state) => messagesState(state).selected,
+  feeds: (state) => messagesState(state).feeds,
+  scrolls: (state) => messagesState(state).scrolls,
+  sendboxes: (state) => messagesState(state).sendboxes,
+  messageList: (state) => Object.keys(messagesState(state).feeds)
 }

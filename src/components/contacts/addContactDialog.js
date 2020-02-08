@@ -41,6 +41,7 @@ function AddContactDialog (props) {
 
   const handleConfirm = () => {
     if (input !== '') {
+      setInput('')
       props.addContact(input)
       handleClose()
     }

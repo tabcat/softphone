@@ -67,7 +67,7 @@ function Login (props) {
     }
   }
 
-  const { initialized } = props
+  const { initialized, loggingIn, logInFailed } = props
 
   return (
     <div className={classes.root}>
@@ -83,7 +83,7 @@ function Login (props) {
                 </Grid>
                 <Grid item>
                   <TextField
-                    error={props.logInFailed}
+                    error={logInFailed}
                     id='username'
                     label={initialized ? 'username' : 'initializing...'}
                     InputLabelProps={{
@@ -91,7 +91,8 @@ function Login (props) {
                     }}
                     inputRef={username}
                     onKeyDown={handleEnter}
-                    disabled={!initialized}
+                    disabled={!initialized || loggingIn}
+                    required={initialized}
                   />
                 </Grid>
               </Grid>
@@ -101,8 +102,8 @@ function Login (props) {
                 </Grid>
                 <Grid item>
                   <TextField
-                    error={props.logInFailed}
-                    helperText={props.logInFailed ? 'login failed' : null}
+                    error={logInFailed}
+                    helperText={logInFailed ? 'login failed' : null}
                     id='password'
                     type='password'
                     label={initialized ? 'password' : 'initializing...'}
@@ -111,7 +112,7 @@ function Login (props) {
                     }}
                     inputRef={password}
                     onKeyDown={handleEnter}
-                    disabled={!initialized}
+                    disabled={!initialized || loggingIn}
                   />
                 </Grid>
               </Grid>
@@ -127,6 +128,7 @@ function Login (props) {
 const mapStateToProps = (s) => {
   return {
     initialized: baseSelectors.initialized(s),
+    loggingIn: baseSelectors.loggingIn(s),
     logInFailed: baseSelectors.logInFailed(s)
   }
 }

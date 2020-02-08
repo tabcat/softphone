@@ -10,7 +10,13 @@ import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined'
 import QrReaderDialog from '../qrReaderDialog'
 
 import { connect } from 'react-redux'
-import { baseSelectors, contactsActionCreators } from '../../state'
+import {
+  baseSelectors,
+  profileSelectors,
+  contactsActionCreators
+} from '../../state'
+
+console.log(profileSelectors)
 
 const QRCode = require('qrcode.react')
 
@@ -30,12 +36,25 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'flex-end'
   },
+  profileId: {
+    display: 'flex',
+    justifyContent: 'center',
+    margin: '5px',
+    textAlign: 'center'
+  },
   qrCode: {
     display: 'flex',
     justifyContent: 'center',
-    padding: '30px',
-    paddingBottom: '10px',
+    padding: '5px 30px',
     alignItems: 'flex-end'
+  },
+  address: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: 196,
+    margin: 'auto',
+    wordBreak: 'break-all',
+    textAlign: 'center'
   },
   qrValue: {
     display: 'flex',
@@ -49,8 +68,7 @@ function Profile (props) {
 
   const [readerOpen, setReaderOpen] = useState(false)
 
-  const address =
-    '/orbitdb/zdpuAo94N9wbyZUbVw8Bk9RDiwWZEqETJ8VQfjRKcKdJoZigh/asym_channel-158.91.123.90.179.4.50.87.60.66.27.151'
+  const code = (props.ipfsAddr || '') + props.address
 
   const name = props.loggedIn.username || ''
 
@@ -61,8 +79,15 @@ function Profile (props) {
   }
 
   const handleCopy = () => {
-    window.navigator.clipboard.writeText(address)
+    try {
+      window.navigator.clipboard.writeText(code)
+    } catch (e) {
+      console.error(e)
+      console.error('failed to copy address to clipboard')
+    }
   }
+
+  if (!props.initialized) return null
 
   // <PhotoCameraOutlinedIcon onClick={() => setReaderOpen(true)} />
   // <div style={{ width: '30px' }} />
@@ -77,8 +102,14 @@ function Profile (props) {
           <Typography variant='h6'>{name}</Typography>
         </div>
         <div>
+          <div className={classes.profileId}>
+            <Typography>{props.address.split('/')[3]}</Typography>
+          </div>
           <div className={classes.qrCode}>
-            <QRCode value={address} size={196} />
+            <QRCode value={code} size={196} />
+          </div>
+          <div className={classes.address}>
+            <Typography>{code}</Typography>
           </div>
           <div className={classes.qrValue}>
             <IconButton onClick={handleCopy}>
@@ -98,7 +129,10 @@ function Profile (props) {
 
 const mapStateToProps = s => {
   return {
-    loggedIn: baseSelectors.loggedIn(s)
+    loggedIn: baseSelectors.loggedIn(s),
+    initialized: profileSelectors.initialized(s),
+    address: profileSelectors.address(s),
+    ipfsAddr: profileSelectors.ipfsAddr(s)
     // expanded: drawerSelectors.activeUserOpen(s)
   }
 }

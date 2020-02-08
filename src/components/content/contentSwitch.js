@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 const contentComponents = {
   Profile: lazy(() => import('../profile')),
   Contacts: lazy(() => import('../contacts')),
-  // Messages: lazy(() => import('../messages'))
+  Messages: lazy(() => import('../messages'))
 }
 
 function ContentSwitch (props) {

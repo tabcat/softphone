@@ -1,5 +1,5 @@
 
-import { contactsActionTypes, baseActionTypes } from '../actions'
+import { contactsActionTypes, baseActionTypes } from '../'
 const {
   SET_CONTACT_LIST,
   SET_REQUEST_LIST,

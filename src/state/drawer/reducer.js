@@ -1,5 +1,5 @@
 
-import { drawerActionTypes, baseActionTypes } from '../actions'
+import { drawerActionTypes, baseActionTypes } from '../'
 const {
   TOGGLE_MOBILE_OPEN,
   TOGGLE_USER_EXPANDED

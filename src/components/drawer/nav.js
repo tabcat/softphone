@@ -24,7 +24,9 @@ const contentToIcon = {
 function Nav (props) {
   const handleSelectContent = (content) => {
     if (props.mobileOpen) props.toggleMobileOpen()
-    props.selectContent(content)
+    if (props.selectedContent !== content) {
+      props.selectContent(content)
+    }
   }
 
   return (

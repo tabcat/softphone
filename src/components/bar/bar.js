@@ -17,7 +17,8 @@ import {
 
 const barContent = {
   Profile: lazy(() => import('../profile/barContent')),
-  Contacts: lazy(() => import('../contacts/barContent'))
+  Contacts: lazy(() => import('../contacts/barContent')),
+  Messages: lazy(() => import('../messages/barContent'))
 }
 
 function Bar (props) {
