@@ -106,7 +106,7 @@ function Profile (props) {
             <Typography>{props.address.split('/')[3]}</Typography>
           </div>
           <div className={classes.qrCode}>
-            <QRCode value={code} size={196} />
+            <QRCode value={code} size={196} includeMargin />
           </div>
           <div className={classes.address}>
             <Typography>{code}</Typography>
