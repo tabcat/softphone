@@ -1,6 +1,10 @@
 # softphone
 a basic featured *phone* for you browser
 
+#### [live instance](http://sphone.hopto.org) (redirects to ipfs gateway)
+  - current version is a rough first draft with only a very basic messaging feature
+  - major issues using in chrome on iOS
+
 #### goals of this webapp:
   - end-to-end encrypted messaging and calling
   - served as static web documents and non-dependant on official infrastructure
